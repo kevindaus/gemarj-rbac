@@ -1,0 +1,15 @@
+{
+    "name": "user/gemarj-rbac",
+    "authors": [
+        {
+            "name": "Kevin Florenz T. Daus",
+            "email": "kevin@optidig.biz"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "gemarjRbac\\": "includes/"
+        }
+    }
+}
