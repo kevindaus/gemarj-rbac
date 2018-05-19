@@ -13,9 +13,9 @@
  * @package           Gemarj_Rbac
  *
  * @wordpress-plugin
- * Plugin Name:       gemarj-rbac
+ * Plugin Name:       Gemarj RBAC Content
  * Plugin URI:        https://github.com/kevindaus/gemarj-rbac
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       This plugin allows you to restrict the content shown base on the current user's role using a shortcode.
  * Version:           1.0.0
  * Author:            Kevin Florenz Daus
  * Author URI:        https://www.linkedin.com/in/kevinflorenzdaus/
@@ -31,11 +31,22 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
+ * Load classes
+ */
+require_once 'vendor/autoload.php';
+
+
+/**
+ * Initialize class settings
+ */
+\gemarjRbac\helper\TemplateLoader::initialize(plugin_dir_path( __FILE__ ));
+
+/**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '1.0.0' );
+define( 'GEMARJ_RBAC_PLUGIN_NAME_VERSION', '1.0.0' );
 
 /**
  * The code that runs during plugin activation.
@@ -65,6 +76,18 @@ register_deactivation_hook( __FILE__, 'deactivate_gemarj_rbac' );
 require plugin_dir_path( __FILE__ ) . 'includes/class-gemarj-rbac.php';
 
 /**
+ * Settings link for the plugin
+ */
+function plugin_add_settings_link( $links ) {
+	$settings_link = '<a href="admin.php?page=gemarj_settings_page">' . __( 'Settings' ) . '</a>';
+	array_push( $links, $settings_link );
+	return $links;
+}
+$plugin = plugin_basename( __FILE__ );
+add_filter( "plugin_action_links_$plugin", 'plugin_add_settings_link' );
+
+
+/**
  * Begins execution of the plugin.
  *
  * Since everything within the plugin is registered via hooks,
@@ -75,7 +98,9 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-gemarj-rbac.php';
  */
 function run_gemarj_rbac() {
 
-	$plugin = new Gemarj_Rbac();
+	$plugin = new Gemarj_Rbac([
+		'plugin_directory'=>plugin_dir_url( __FILE__ )
+	]);
 	$plugin->run();
 
 }
