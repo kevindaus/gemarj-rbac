@@ -16,7 +16,7 @@
  * Plugin Name:       Gemarj RBAC Content
  * Plugin URI:        https://github.com/kevindaus/gemarj-rbac
  * Description:       This plugin allows you to restrict the content shown base on the current user's role using a shortcode.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Kevin Florenz Daus
  * Author URI:        https://www.linkedin.com/in/kevinflorenzdaus/
  * License:           GPL-2.0+
@@ -24,6 +24,9 @@
  * Text Domain:       gemarj-rbac
  * Domain Path:       /languages
  */
+
+
+require 'plugin-update-checker/plugin-update-checker.php';
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -46,7 +49,7 @@ require_once 'vendor/autoload.php';
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'GEMARJ_RBAC_PLUGIN_NAME_VERSION', '1.0.0' );
+define( 'GEMARJ_RBAC_PLUGIN_NAME_VERSION', '1.0.1' );
 
 /**
  * The code that runs during plugin activation.
@@ -104,4 +107,17 @@ function run_gemarj_rbac() {
 	$plugin->run();
 
 }
+
+function run_gemarj_rbac_updater()
+{
+	$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+		'https://github.com/kevindaus/gemarj-rbac',
+		__FILE__,
+		'gemarj-rbac'
+	);
+	$myUpdateChecker->setAuthentication( 'ea60fad3fd76a45af1448c3cd5b7594aed921222' );
+}
+
+
 run_gemarj_rbac();
+run_gemarj_rbac_updater();
