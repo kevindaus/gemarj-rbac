@@ -105,7 +105,7 @@ class Gemarj_Rbac {
 		) );
 		/*Update settings*/
 		add_action( 'admin_post_gemarj_rbac_update_options', array( $this, 'gemarj_rbac_update_options_handle_post' ) );
-		add_shortcode( 'gemarj-rbac', array( $this, 'register_shortcode' ) );
+		add_shortcode( 'gm-rbac', array( $this, 'register_shortcode' ) );
 
 	}
 
@@ -206,6 +206,7 @@ EOL;
 
 
 	public function register_shortcode( $attributes, $content ) {
+		do_action( 'gm_before_check_action', array( 'attributes' => $attributes, 'content' => $content ) );
 		$currentLoggedInUser   = wp_get_current_user();
 		$allowerdToViewContent = false;
 		if ( isset( $attributes['role'] ) && ! empty( $attributes['role'] ) ) {
@@ -241,17 +242,18 @@ EOL;
 				}
 			}
 		}
+		do_action( 'gm_after_check_action', array( 'attributes' => $attributes, 'content' => $content ) );
 		/*if allowed to view*/
 		if ( $allowerdToViewContent ) {
+			do_action( 'gm_before_render_action', array( 'attributes' => $attributes, 'content' => $content ) );
 			return $content;
 		} else {
-			if ( isset( $attributes['errorMessage'] ) && ! empty( $attributes['errorMessage'] ) ) {
-				return sanitize_text_field( $attributes['errorMessage'] );
-			} else {
-				$defaultErrorMessage = get_option( 'gemarj-rbac-error-message', 'You are not allowed to view this content' );
-
-				return $defaultErrorMessage;
+			$errorMessage = get_option( 'gemarj-rbac-error-message', 'You are not allowed to view this content' );
+			if ( isset( $attributes['errormessage'] ) && ! empty( $attributes['errormessage'] ) ) {
+				$errorMessage = sanitize_text_field( $attributes['errormessage'] );
 			}
+			$errorMessage = apply_filters( 'gm_error_message_filter', $errorMessage );
+			return $errorMessage;
 		}
 	}
 
