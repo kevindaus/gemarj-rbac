@@ -12,7 +12,51 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-A simple plugin that allows admin to restrict content depending on ```current viewers``` role.
+With this plugin you can restrict access to certain content
+that only the users with certain role can access and view
+
+== Key Features ==
+
+Anyone with edit/create content access can restrict content
+Can be used in any custom post type.
+
+== Usage ==
+
+`[gm-rbac role="selected_role"]`` shortcode allows for private content to be viewed by those who have the selected role.
+`[gm-rbac errorMessage="Please login here . <a href='/wp-admin'>Login here</a>"]` On the fly cuztomizable error message.
+[gm-rbac role="selected_role" capability="selected_capability" ] You can use role and capability combination to better filter the user that can access the content
+
+== Filter ==
+
+```gm_error_message_filter```
+* Allow user to edit the enclosed content. You may want to add your custom filter to wrap the content with a custom class or id.
+
+```
+Example
+
+add_filter("gm_error_message_filter" , function($errorMessage){
+    $errorMessage = "<div class='my-custom-error-style-class'>".$errorMessage."</div>";
+    return $errorMessage;//dont forget to return it
+});
+
+```
+
+== Action ==
+
+```gm_before_check_action```
+* Allow user to attach an event handler before checking the current users' permission on the item enclosed by the shortcode.
+
+```gm_before_render_action```
+* Allow user to attach an event handler before rendering the content enclosed in the shortcode.
+
+```gm_after_check_action```
+* Allow user to attach an event handler after checking the current users' permission on the item enclosed by the shortcode.
+
+== Shortcode order of execution ==
+1. gm_before_check_action
+1. gm_after_check_action
+1. gm_before_render_action
+
 
 
 == Installation ==
